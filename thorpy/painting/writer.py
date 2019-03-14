@@ -31,6 +31,19 @@ def get_font_name(font_name, proposed_fonts=None):
     return pygame.font.get_default_font()
 
 
+font_cache = {}
+
+
+def get_font(font_name, size, bold, italic):
+    key = font_name + str(size) + str(bold) + str(italic)
+    if key in font_cache.keys():
+        return font_cache[key]
+    else:
+        font = pygame.font.SysFont(font_name, size, bold, italic)
+        font_cache[key] = font
+        return font
+
+
 class BasicWriter(object):
     """Can transform string to image, using defined font and style"""
 
@@ -65,8 +78,7 @@ class BasicWriter(object):
         self.underline = underline
         self.aa = aa
 ##        self.font = pygame.font.Font(self.font_name, self.size)
-        self.font = pygame.font.SysFont(self.font_name, self.size, self.bold,
-                                        self.italic)
+        self.font = get_font(self.font_name, self.size, self.bold, self.italic)
         self.bckgr_color = bckgr_color
 
     def set_font(self, new_font):
@@ -129,7 +141,7 @@ class BasicWriter(object):
 
     def refresh_font(self):
         """ """
-        self.font = pygame.font.SysFont(self.font_name, self.size)
+        self.font = get_font(self.font_name, self.size, self.bold, self.italic)
 
 
 class Writer(BasicWriter):
