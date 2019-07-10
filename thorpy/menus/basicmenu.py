@@ -110,10 +110,16 @@ class BasicMenu(object):
             e.blit()
             e.update()
 
-    def react(self, event):
+    def react(self, event, continue_on_error=False):
         elements = self.events.get(event.type, [])
         for element in elements:
-            element.react(event)
+            try:
+                element.react(event)
+            except Exception as e:
+                if continue_on_error:
+                    pass
+                else:
+                    raise e
 
     def block_unused_events(self):
         """! This disable the possibility to handle unexpected events"""
